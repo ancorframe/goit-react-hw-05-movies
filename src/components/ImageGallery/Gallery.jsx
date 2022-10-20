@@ -18,21 +18,7 @@ export class Gallery extends React.Component {
   async componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
 
-    if (searchQuery !== prevState.searchQuery) {
-      this.setState({ page: 1 });
-      this.setState({ status: 'loading' });
-      try {
-        const response = await GetImage(searchQuery, page);
-        if (!response.length) {
-          return this.setState({ status: 'error' });
-        }
-        this.setState({ data: response });
-        this.setState({ status: 'loadmore' });
-      } catch (error) {
-        this.setState({ status: 'error' });
-      }
-    }
-    if (page !== prevState.page) {
+    if (searchQuery !== prevState.searchQuery || page !== prevState.page) {
       this.setState({ status: 'loading' });
       try {
         const response = await GetImage(searchQuery, page);
@@ -54,7 +40,7 @@ export class Gallery extends React.Component {
   };
 
   onSubmit = value => {
-    this.setState({ searchQuery: value });
+    this.setState({ searchQuery: value, page: 1, data: [] });
   };
 
   incrementPage = () => {

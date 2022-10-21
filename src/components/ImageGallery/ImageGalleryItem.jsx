@@ -7,15 +7,17 @@ export const ImageGalleryItem = ({ data }) => {
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     if (showModal) {
+      console.log('mount');
       window.addEventListener('keydown', onEsc);
     }
 
     return () => {
       if (showModal) {
+        console.log('unmount');
         window.removeEventListener('keydown', onEsc);
       }
     };
-  }, [showModal]);
+  });
 
   const onEsc = e => {
     if (e.code === 'Escape') {

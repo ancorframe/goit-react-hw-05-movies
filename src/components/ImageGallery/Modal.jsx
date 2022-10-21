@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Overlay, ModalContainer } from './Gallery.styled';
@@ -13,4 +14,9 @@ export const Modal = ({ data, onBackdropClose }) => {
     </Overlay>,
     modalRoot
   );
+};
+
+Modal.propTypes = {
+  data: PropTypes.object.isRequired,
+  onBackdropClose: PropTypes.func.isRequired
 };

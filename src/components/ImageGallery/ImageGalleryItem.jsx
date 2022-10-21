@@ -1,49 +1,50 @@
-import React from 'react';
+import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 import { Image } from './Gallery.styled';
 import { Modal } from './Modal';
 
-export class ImageGalleryItem extends React.Component {
-  state = {
-    showModal: false,
-  };
+export const ImageGalleryItem = ({ data }) => {
+  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+    if (showModal) {
+      window.addEventListener('keydown', onEsc);
+    }
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.onEsc);
-  }
+    return () => {
+      if (showModal) {
+        window.removeEventListener('keydown', onEsc);
+      }
+    };
+  }, [showModal]);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEsc);
-  }
-
-  onEsc = e => {
+  const onEsc = e => {
     if (e.code === 'Escape') {
-      this.onClose();
+      onClose();
     }
   };
 
-  onBackdropClose = e => {
+  const onBackdropClose = e => {
     if (e.currentTarget === e.target) {
-      this.onClose();
+      onClose();
     }
   };
 
-  onOpen = () => {
-    this.setState({ showModal: true });
+  const onOpen = () => {
+    setShowModal(true);
   };
 
-  onClose = () => {
-    this.setState({ showModal: false });
+  const onClose = () => {
+    setShowModal(false);
   };
 
-  render() {
-    const data = this.props.data;
-    return (
-      <>
-        <Image src={data.webformatURL} alt={data.tags} onClick={this.onOpen} />
-        {this.state.showModal && (
-          <Modal data={data} onBackdropClose={this.onBackdropClose} />
-        )}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Image src={data.webformatURL} alt={data.tags} onClick={onOpen} />
+      {showModal && <Modal data={data} onBackdropClose={onBackdropClose} />}
+    </>
+  );
+};
+
+ImageGalleryItem.propTypes = {
+  data: PropTypes.object.isRequired,
+};

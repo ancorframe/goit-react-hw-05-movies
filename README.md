@@ -1,1 +1,1 @@
-goit-react-hw-04-gallery
+goit-react-hw-05-movies

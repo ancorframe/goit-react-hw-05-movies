@@ -13,10 +13,25 @@ export const MovieDetails = () => {
 
   const [movieDetails, setMovieDetails] = useState(null);
 
+  // варіант 1
+  const [goBack, setGoBack] = useState(null);
+
   useEffect(() => {
+    if (goBack) {
+      return;
+    }
+    setGoBack(location);
+  }, [goBack, location]);
+
+  //варіант 2
+  //const goBack = useRef(location)
+
+  useEffect(() => {
+    const controller = new AbortController();
+
     const fetch = async () => {
       try {
-        const response = await getMovieDetails(movieId);
+        const response = await getMovieDetails(movieId, controller);
         setMovieDetails(response);
         return;
       } catch (error) {
@@ -24,6 +39,9 @@ export const MovieDetails = () => {
       }
     };
     fetch();
+    return () => {
+      controller.abort();
+    };
   }, [movieId]);
 
   if (error) {
@@ -39,7 +57,8 @@ export const MovieDetails = () => {
   return (
     <>
       <Box as="main">
-        <BackLink to={location.state?.from ?? '/'}>
+        {/* <BackLink to={location.state?.from ?? '/'}> */}
+        <BackLink to={goBack.state?.from ?? '/'}>
           <BsArrowLeft />
           go back
         </BackLink>

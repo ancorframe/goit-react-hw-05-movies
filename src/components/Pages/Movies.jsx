@@ -6,7 +6,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FilmsItem, Form } from 'components/Movies/Movies.styled';
 
-
 export const Movies = () => {
   const [films, setFilms] = useState(null);
   const [searchParems, setSearchParams] = useSearchParams();
@@ -34,9 +33,11 @@ export const Movies = () => {
     if (!searchUrl) {
       return;
     }
+    const controller = new AbortController();
+
     const fetch = async () => {
       try {
-        const response = await searchMovie(searchUrl);
+        const response = await searchMovie(searchUrl, controller);
         if (!response.length) {
           notify();
           return;
@@ -46,11 +47,13 @@ export const Movies = () => {
         return;
       } catch (error) {
         console.log(error);
-      } finally {
-        setIsSubmit(false);
       }
     };
     fetch();
+
+    return () => {
+      controller.abort();
+    };
   }, [isSubmit, searchUrl]);
 
   const handleChange = e => {

@@ -5,14 +5,14 @@ import { useLocation } from 'react-router-dom';
 import { FilmsItem } from 'components/Movies/Movies.styled';
 
 export const Home = () => {
-
   const [trends, setTrends] = useState([]);
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetch = async () => {
       try {
-        const response = await getTrending();
+        const response = await getTrending(controller);
         setTrends(response);
         return;
       } catch (error) {
@@ -20,6 +20,10 @@ export const Home = () => {
       }
     };
     fetch();
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return (

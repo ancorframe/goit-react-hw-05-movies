@@ -1,19 +1,18 @@
 import { useParams } from 'react-router-dom';
 import { getMovieCredits } from 'components/API/Api';
 import { useState, useEffect } from 'react';
-import { ActorImg, CastItem} from './Movies.styled';
+import { ActorImg, CastItem } from './Movies.styled';
 import { Box } from 'components/Box';
 
 export const Cast = () => {
   const { movieId } = useParams();
-
   const [cast, setCast] = useState([]);
 
-
   useEffect(() => {
+    const controller = new AbortController();
     const fetch = async () => {
       try {
-        const response = await getMovieCredits(movieId);
+        const response = await getMovieCredits(movieId, controller);
         setCast(response);
         return;
       } catch (error) {
@@ -21,6 +20,9 @@ export const Cast = () => {
       }
     };
     fetch();
+    return () => {
+      controller.abort();
+    };
   }, [movieId]);
 
   if (!cast.length) {
@@ -44,7 +46,7 @@ export const Cast = () => {
 
 const Lol = ({ data }) => {
   const { character, original_name, profile_path } = data;
-  
+
   return (
     <>
       <ActorImg

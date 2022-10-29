@@ -9,19 +9,20 @@ import { BackLink, DopLink, Poster } from 'components/Movies/Movies.styled';
 export const MovieDetails = () => {
   const { movieId } = useParams();
   const location = useLocation();
+  console.log("location", location)
   const [error, setError] = useState(null);
 
   const [movieDetails, setMovieDetails] = useState(null);
 
   // варіант 1
-  const [goBack, setGoBack] = useState(null);
+  // const [goBack, setGoBack] = useState(null);
 
-  useEffect(() => {
-    if (goBack) {
-      return;
-    }
-    setGoBack(location);
-  }, [goBack, location]);
+  // useEffect(() => {
+  //   if (goBack) {
+  //     return;
+  //   }
+  //   setGoBack(location);
+  // }, [goBack, location]);
 
   //варіант 2
   //const goBack = useRef(location)
@@ -58,7 +59,7 @@ export const MovieDetails = () => {
     <>
       <Box as="main">
         {/* <BackLink to={location.state?.from ?? '/'}> */}
-        <BackLink to={goBack.state?.from ?? '/'}>
+        <BackLink to={location.state?.from ?? '/'}>
           <BsArrowLeft />
           go back
         </BackLink>
@@ -89,8 +90,12 @@ export const MovieDetails = () => {
           borderBottom="normal"
         >
           <h2>Additional information</h2>
-          <DopLink to="cast">cast</DopLink>
-          <DopLink to="reviews">reviews</DopLink>
+          <DopLink to="cast" state={{ from: location.state?.from }}> 
+            cast
+          </DopLink>
+          <DopLink to="reviews" state={{ from: location.state?.from }}>
+            reviews
+          </DopLink>
         </Box>
         <Outlet />
       </Box>
